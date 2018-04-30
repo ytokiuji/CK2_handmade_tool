@@ -42,7 +42,7 @@ class CK2SpecialEncode
             files_list = Dir.children(before_conversion_text)
             files_list.delete_if {|file_name| file_name !~ /\.utf8b\.csv$/}
             files_list.each{|file_name|
-                read_file_per_char("#{before_conversion_text}\\#{file_name}") 
+                read_file_per_char("#{before_conversion_text}/#{file_name}") 
                 @utf16_array.clear
                 @after_conversion_text.clear
             }
@@ -64,6 +64,9 @@ class CK2SpecialEncode
 
     # 開くディレクトリをチェックする
     def check_open_directory(directory_name)
+        puts "ディレクトリをチェックします"
+        p directory_name
+
         files_list = Dir.children(directory_name)
         if files_list.size < 1
             raise "指定されたフォルダにファイルがありません" 
@@ -103,15 +106,14 @@ class CK2SpecialEncode
 
     # 変換後の配列をバイナリファイルに出力する
     def save_file_binary(file_name)
-        save_file_name = "#{file_name.delete_suffix('.utf8b.csv')}"
+        save_file_name = file_name.delete_suffix('.utf8b.csv')
         begin
           IO.binwrite("#{save_file_name}.csv", @after_conversion_text.pack("c*"))
         rescue SystemCallError => exception
           puts %Q(class=[#{exception.class}] message=[#{exception.message}])
         rescue IOError => exception
           puts %Q(class=[#{exception.class}] message=[#{exception.message}])
-        end    
-
+        end
     end
 
     # 文字列を受け取ったとき
