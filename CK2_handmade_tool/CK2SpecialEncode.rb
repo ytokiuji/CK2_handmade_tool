@@ -40,7 +40,7 @@ class CK2SpecialEncode
             # ディレクトリ指定
             check_open_directory(before_conversion_text)
             files_list = Dir.children(before_conversion_text)
-            files_list.delete_if {|file_name| file_name !~ /\.utf8b\.txt$/}
+            files_list.delete_if {|file_name| file_name !~ /\.utf8b\.csv$/}
             files_list.each{|file_name|
                 read_file_per_char("#{before_conversion_text}\\#{file_name}") 
                 @utf16_array.clear
@@ -74,7 +74,7 @@ class CK2SpecialEncode
     #　開くファイルをチェックする
     def check_open_file(file_name)
         # ファイル名パターンの確認
-        unless file_name =~ /utf8b\.txt$/
+        unless file_name =~ /utf8b\.csv$/
             raise "ファイル名を確認してください" 
             exit(1)
         end
@@ -103,9 +103,9 @@ class CK2SpecialEncode
 
     # 変換後の配列をバイナリファイルに出力する
     def save_file_binary(file_name)
-        save_file_name = "#{file_name.delete_suffix('.utf8b.txt')}"
+        save_file_name = "#{file_name.delete_suffix('.utf8b.csv')}"
         begin
-          IO.binwrite("#{save_file_name}.txt", @after_conversion_text.pack("c*"))
+          IO.binwrite("#{save_file_name}.csv", @after_conversion_text.pack("c*"))
         rescue SystemCallError => exception
           puts %Q(class=[#{exception.class}] message=[#{exception.message}])
         rescue IOError => exception
