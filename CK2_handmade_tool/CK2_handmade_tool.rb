@@ -2,6 +2,8 @@ require 'optparse'
 require './CK2SpecialEncode.rb'
 require './CK2DynastyTXT2CSV.rb'
 require './CK2CharacterTXT2CSV.rb'
+require './CK2CharacterNameReplacement.rb'
+require './CK2DynastyNameReplacement.rb'
 
 parser = OptionParser.new
 params = {}
@@ -29,5 +31,28 @@ subparsers['character'] = OptionParser.new.on('-i VAL', '--input VAL') {|v|
 #o.csv_save
 }
 
+params ={}
+replace_parser = OptionParser.new
+replace_parser.on('-i REPLACEMENT_TARGET', '--input REPLACEMENT_TARGET') {|v|
+  params[:target] = v
+}
+replace_parser.on('-m REPLACEMENT_MAP', '--mapping REPLACEMENT_MAP') {|v|
+  params[:map] = v
+  reader = CK2CharacterNameReplacement.new(params)
+}
+subparsers['cnamereplace'] = replace_parser
+
+replace_parser2 = OptionParser.new
+replace_parser2.on('-i REPLACEMENT_TARGET', '--input REPLACEMENT_TARGET') {|v|
+  params[:target] = v
+}
+replace_parser2.on('-m REPLACEMENT_MAP', '--mapping REPLACEMENT_MAP') {|v|
+  params[:map] = v
+  reader = CK2DynastyNameReplacement.new(params)
+}
+subparsers['dnamereplace'] = replace_parser2
+
 parser.order!(ARGV)
+#pp params
+#pp ARGV
 subparsers[ARGV.shift].parse!(ARGV) unless ARGV.empty?
