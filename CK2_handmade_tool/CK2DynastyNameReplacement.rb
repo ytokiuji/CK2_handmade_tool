@@ -78,18 +78,23 @@ class CK2DynastyNameReplacement
 			when /^\d+\s*=\s*/
         dynasty_id_temp = line.slice(/^\d+/)
 				#pp "dynasty_id_temp: #{dynasty_id_temp}"
-			when /^name\s*=/
-				# one_man_arr[2] = line.encode('UTF-8').match(/^name\s*=\s*\"*(([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+)\"*/).to_a[1]
-				# # /^name\s*=\s*"([[\w-]+[:blank:]]*[\w-]*)"/
-				# x,one_man_arr2["name"], one_man_arr2["name_comment"] = line.encode('UTF-8').split(/\s*=\s*|\#/)
-        name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+/)
+      when /^name\s*=/
+        begin
+          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+/)
 
-        @name_list.get_row_from_id(dynasty_id_temp).each{|row|
-          if row['name'] == name_temp then
-            line = "\t" + jline.gsub(/\"([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
-            break
-          end
-        }
+          @name_list.get_row_from_id(dynasty_id_temp).each{|row|
+            if row['name_jp'] && row['name'] == name_temp then
+              line = "\t" + jline.gsub(/\"([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
+              break
+            end
+          }
+        rescue => exception
+          pp exception
+          puts 'An error occurred while replacing the following line.'
+          puts "#{line}"
+          puts "Dynasty ID: #{dynasty_id_temp}"
+          exit 1
+        end
 			when /^culture/
 			when /^religion\s*=/
 			when /^used_for_random/
