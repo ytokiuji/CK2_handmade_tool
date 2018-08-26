@@ -58,7 +58,7 @@ class CK2DynastyNameReplacement
   def open_output_file(path_src)
     begin
       bom = "\uFEFF"
-      @out = ::File.open(path_src, "w:UTF-8")
+      @out = ::File.open(path_src, "wb:UTF-8")
       @out << bom
     rescue => exc
       pp exc
@@ -79,10 +79,10 @@ class CK2DynastyNameReplacement
 			when /^#/
 			when /^\d+\s*=\s*\{/
         dynasty_id_temp = line.slice(/^\d+/)
-				pp "dynasty_id_temp: #{dynasty_id_temp}"
+				#pp "dynasty_id_temp: #{dynasty_id_temp}"
 			when /^\d+\s*=\s*/
         dynasty_id_temp = line.slice(/^\d+/)
-				pp "dynasty_id_temp: #{dynasty_id_temp}"
+				#pp "dynasty_id_temp: #{dynasty_id_temp}"
 			when /^name\s*=/
 				# one_man_arr[2] = line.encode('UTF-8').match(/^name\s*=\s*\"*(([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+)\"*/).to_a[1]
 				# # /^name\s*=\s*"([[\w-]+[:blank:]]*[\w-]*)"/
@@ -127,7 +127,7 @@ class CK2DynastyNameReplacement
 					# one_man_arr2.clear
 				end
 			else
-				pp "どの条件にもマッチしない「#{line.encode('UTF-8')}」"
+				#pp "どの条件にもマッチしない「#{line.encode('UTF-8')}」"
 			end
 
       # if scope_level > 1 then

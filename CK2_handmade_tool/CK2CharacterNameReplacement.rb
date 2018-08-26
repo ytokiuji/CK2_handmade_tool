@@ -56,7 +56,7 @@ class CK2CharacterNameReplacement
   def open_output_file(path_src)
     begin
       bom = "\uFEFF"
-      @out = ::File.open(path_src, "w:UTF-8")
+      @out = ::File.open(path_src, "wb:UTF-8")
       @out << bom
     rescue => exc
       pp exc
@@ -219,7 +219,7 @@ class CK2CharacterNameReplacement
       when /^\s*who\s*=\s*ROOT$/
       when ''
       else
-        pp "どの条件にもマッチしない「#{line.encode('UTF-8')}」"
+        #pp "どの条件にもマッチしない「#{line.encode('UTF-8')}」"
       end
 
       # if scope_level > 1 then
