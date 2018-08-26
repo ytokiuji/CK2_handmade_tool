@@ -16,11 +16,12 @@ class CK2CharacterReplaceNameList
 
   def open_csv_file(source)
     begin
-      @arr = CSV.read(source, {headers: true})
+      @arr = CSV.read(source, {headers: true, encoding: "BOM|UTF-8"})
       #pp @arr[1]
     rescue => exception
       pp exception
-      pp '指定されたCSVファイルの文字エンコードが UTF-8 ではありません。あらかじめ変換しておいてください。'
+      pp 'The character encoding of the specified CSV file is not UTF-8. Please convert in advance.'
+      exit 1
     end
   end
 

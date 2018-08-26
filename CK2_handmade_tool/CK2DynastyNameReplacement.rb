@@ -17,11 +17,6 @@ class CK2DynastyNameReplacement
 			exit 
     end
     @name_list = CK2DynastyrReplaceNameList.new(target[:map])
-    
-    # pp @name_list.arr
-    # pp @name_list.get_name_from_id(1)
-    # pp @name_list.get_namejp_from_id(1)
-    # pp @name_list.get_row_from_id(1)
 
     file_list.each{|file_path|
       run(file_path, file_path.gsub(/.txt$/, ".utf8b.txt"))
@@ -33,8 +28,8 @@ class CK2DynastyNameReplacement
   # 一つのファイルの処理
   #
   def run(file_path, output_path)
-    pp "入力ファイル：#{file_path}"
-    pp "出力ファイル：#{output_path}"
+    #pp "入力ファイル：#{file_path}"
+    #pp "出力ファイル：#{output_path}"
     open_file(file_path)
     open_output_file(output_path)
     load
