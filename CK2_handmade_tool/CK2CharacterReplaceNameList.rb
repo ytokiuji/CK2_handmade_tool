@@ -16,7 +16,7 @@ class CK2CharacterReplaceNameList
 
   def open_csv_file(source)
     begin
-      @arr = CSV.read(source, {headers: true, encoding: "BOM|UTF-8"})
+      @arr = CSV.read(source, 'r:BOM|UTF-8', {headers: true})
       #pp @arr[1]
     rescue => exception
       pp exception
