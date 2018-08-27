@@ -144,16 +144,27 @@ class CK2CharacterNameReplacement
         # holder_scopeスコープ開始
         scope_level += 1
       when /^name\s*=\s*/
-        # 名前
-        name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+/)
-        #pp @name_list.get_row_from_id(char_id_temp)
+        begin
+          # 名前
+          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+/)
+          #pp @name_list.get_row_from_id(char_id_temp)
         
-        @name_list.get_row_from_id(char_id_temp).each{|row|
-          if row['name'] == name_temp && row['date'] == date_temp then
-            line = "\t" * (scope_level) + jline.gsub(/\"([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
-            break
-          end
-        }
+          @name_list.get_row_from_id(char_id_temp).each{|row|
+            pp row['name']
+            if row['name'] == name_temp && row['date'] == date_temp then
+              line = "\t" * (scope_level) + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
+              break
+            end
+          }
+        rescue => exception
+          pp exception
+          puts 'An error occurred while replacing the following line.'
+          puts "#{line}"
+          puts "UTF-8: #{jline.encode('UTF-8')}"
+          puts "name_temp: #{name_temp}"
+          puts "Char ID: #{char_id_temp}"
+          exit 1
+        end
 
       when /^dynasty\s*=\s*/
         # dynasty id

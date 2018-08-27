@@ -84,7 +84,7 @@ class CK2DynastyNameReplacement
 
           @name_list.get_row_from_id(dynasty_id_temp).each{|row|
             if row['name_jp'] && row['name'] == name_temp then
-              line = "\t" + jline.gsub(/\"([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
+              line = "\t" + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
               break
             end
           }
