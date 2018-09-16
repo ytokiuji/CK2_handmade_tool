@@ -134,57 +134,63 @@ class CK2SpecialEncode
         row_byte_requirement = [0xA4,0xA3,0xA7,0x24,0x5B,0x00,0x5C,0x20,0x0D,0x0A,0x22,0x7B,0x7D,0x40,0x80,0x7E,0xBD]
 
         @utf16_array.each{|char|
-            escape_char = 0x10
-            high = (char >> 8) & 0xFF
-            low = char & 0xFF
-            
-            #p "変換前： #{sprintf("%#x", high)} #{sprintf("%#x", low)}"
+            begin
+                escape_char = 0x10
+                high = (char >> 8) & 0xFF
+                low = char & 0xFF
+                
+                #p "変換前： #{sprintf("%#x", high)} #{sprintf("%#x", low)}"
 
-            #1バイトのUTF-16
-            if high==0 
-                @after_conversion_text.push low
-                next
-            end
+                #1バイトのUTF-16
+                if high==0 
+                    @after_conversion_text.push low
+                    next
+                end
 
-            # エスケープ判定開始
-            escape_char += 
-            case high
-            when *high_byte_requirement then 2
-            else  0
-            end
+                # エスケープ判定開始
+                escape_char += 
+                case high
+                when *high_byte_requirement then 2
+                else  0
+                end
 
-            escape_char +=
-            case low
-            when *row_byte_requirement then 1
-            else  0
-            end
-            
-            #p "escape: #{sprintf("%#x", escape_char)}"
+                escape_char +=
+                case low
+                when *row_byte_requirement then 1
+                else  0
+                end
+                
+                #p "escape: #{sprintf("%#x", escape_char)}"
 
-            case escape_char
-            when 0x11
-                low += 15
-            when 0x12
-                high -= high > 9 ? 9 : 0
-            when 0x13
-                low += 15
-                high -= high > 9 ? 9 : 0
-            when 0x10
-            else
+                case escape_char
+                when 0x11
+                    low += 15
+                when 0x12
+                    high -= high > 9 ? 9 : 0
+                when 0x13
+                    low += 15
+                    high -= high > 9 ? 9 : 0
+                when 0x10
+                else
+                end
+                
+                #p "es #{sprintf("%#x", high)} #{sprintf("%#x", low)}"
+                #puts ""
+                
+                @after_conversion_text.push escape_char
+                # 渡された下位バイトを見てエスケープ例外か判断して返す
+                new_h = @@low_escape_exception[low] ? @@low_escape_exception[low] : low
+                new_r = @@low_escape_exception[high] ? @@low_escape_exception[high] : high
+                
+                @after_conversion_text.push  new_h
+                @after_conversion_text.push  new_r
+                
+                #p "変換後： #{sprintf("%#x", escape_char)} #{sprintf("%#x", new_h)} #{sprintf("%#x", new_r)}"
+            rescue => exception
+                pp exception
+                puts "char: #{char}"
+                exit 1
             end
-            
-            #p "es #{sprintf("%#x", high)} #{sprintf("%#x", low)}"
-            #puts ""
-            
-            @after_conversion_text.push escape_char
-            # 渡された下位バイトを見てエスケープ例外か判断して返す
-            new_h = @@low_escape_exception[low] ? @@low_escape_exception[low] : low
-            new_r = @@low_escape_exception[high] ? @@low_escape_exception[high] : high
-            
-            @after_conversion_text.push  new_h
-            @after_conversion_text.push  new_r
-            
-            #p "変換後： #{sprintf("%#x", escape_char)} #{sprintf("%#x", new_h)} #{sprintf("%#x", new_r)}"
         }
         #p "#{@utf8_array}"
     end
