@@ -4,6 +4,7 @@ require './CK2DynastyTXT2CSV.rb'
 require './CK2CharacterTXT2CSV.rb'
 require './CK2CharacterNameReplacement.rb'
 require './CK2DynastyNameReplacement.rb'
+require './CK2TitleTXTReader.rb'
 
 parser = OptionParser.new
 params = {}
@@ -16,6 +17,8 @@ subparsers = Hash.new {|h,k|
   exit 1
 }
 subparsers['escape'] = OptionParser.new.on('-i VAL', '--input VAL') {|v| encoder = CK2SpecialEncode.new(v) }
+subparsers['title'] = OptionParser.new.on('-i VAL', '--input VAL') {|v| encoder = CK2TitleTXTReader.new(v) }
+
 subparsers['dynasty'] = OptionParser.new.on('-i VAL', '--input VAL') {|v| 
   reader = CK2DynastyTXT2CSV.new(v) 
   #temp_arr = reader.load(v)
