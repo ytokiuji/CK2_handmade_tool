@@ -80,11 +80,11 @@ class CK2DynastyNameReplacement
 				#pp "dynasty_id_temp: #{dynasty_id_temp}"
       when /^name\s*=/
         begin
-          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+/)
+          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|\'|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+/)
 
           @name_list.get_row_from_id(dynasty_id_temp).each{|row|
             if row['name_jp'] && row['name'] == name_temp then
-              line = "\t" + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
+              line = "\t" + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|\'|[¿šïÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
               break
             end
           }

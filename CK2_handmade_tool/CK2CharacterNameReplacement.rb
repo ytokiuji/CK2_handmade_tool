@@ -146,13 +146,13 @@ class CK2CharacterNameReplacement
       when /^name\s*=\s*/
         begin
           # 名前
-          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+/)
+          name_temp = jline.encode('UTF-8').sub(/name\s*=\s*/, '').slice(/([a-z]|\-|[A-Z]|\s|\'|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+/)
           #pp @name_list.get_row_from_id(char_id_temp)
         
           @name_list.get_row_from_id(char_id_temp).each{|row|
             pp row['name']
             if row['name'] == name_temp && row['date'] == date_temp then
-              line = "\t" * (scope_level) + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
+              line = "\t" * (scope_level) + jline.encode('UTF-8').gsub(/\"([a-z]|\-|[A-Z]|\s|\'|[¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõöö÷øùúûüýþÿ])+\"/, "\"#{row['name_jp']}\"") + "\n"
               break
             end
           }
